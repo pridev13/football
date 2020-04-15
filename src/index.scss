@@ -1,0 +1,272 @@
+@use "sass:color";
+
+$gk-color: #990000;
+$def-color: #ffd966;
+$mid-color: #6aa84f;
+$att-color: #1155cc;
+
+$orange: #ff9900;
+
+$lightgreen: #b6d7a8;
+$darkgreen: #274e13;
+
+$lightred: #f7d5d5;
+$darkred: #d52b2b;
+
+$black: #000;
+$white: #eee;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.App {
+  display: grid;
+  grid-template-columns: calc((100% - 20px) * 0.3) calc((100% - 20px) * 0.4) calc((100% - 20px) * 0.3);
+  column-gap: 10px;
+  row-gap: 10px;
+  padding: 10px;
+  align-items: start;
+
+  .scoreboard {
+    grid-column: span 3;
+    justify-items: center;
+    border: 1px dotted $black;
+    padding: 5px;
+    text-align: center;
+
+    h1 {
+      margin: 5px;
+    }
+  }
+
+  .team {
+    border: 1px dotted $black;
+    padding: 5px;
+
+    .team-name {
+      padding: 0px 5px 5px;
+      text-align: center;
+      margin: 5px auto;
+    }
+
+    .players {
+      .player {
+        margin-bottom: 10px;
+        border-top: 1px solid $black;
+        display: grid;
+        grid-template-columns: 14% 66% 20%;
+        background-image: linear-gradient(135deg, rgba($gk-color, 0.6), $gk-color);
+
+        &.player-def {
+          background-image: linear-gradient(135deg, $def-color, rgba($def-color, 0.6));
+        }
+
+        &.player-mid {
+          background-image: linear-gradient(135deg, rgba($mid-color, 0.6), $mid-color);
+        }
+
+        &.player-att {
+          background-image: linear-gradient(135deg, $att-color, rgba($att-color, 0.6));
+        }
+
+        > div {
+          padding: 5px;
+        }
+
+        .player-avatar {
+          grid-row: span 2;
+          > svg {
+            max-width: 100%;
+            height: auto;
+          }
+        }
+
+        .player-pos {
+          text-transform: uppercase;
+        }
+
+        .player-skills {
+          grid-column: span 2;
+          font-size: 12px;
+          display: grid;
+          grid-template-columns: repeat(3, calc(100% / 3));
+
+          .player-skill {
+            text-transform: uppercase;
+          }
+        }
+      }
+    }
+  }
+
+  .field-wrapper {
+    grid-row: span 2;
+
+    .field {
+      position: relative;
+
+      .background {
+        width: 100%;
+
+        img {
+          width: 100%;
+        }
+      }
+
+      .field-team,
+      .overlay {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 10;
+        width: 91%;
+        height: 91.6%;
+        margin: 2.4% 4.5% 2.5%;
+        pointer-events: none;
+      }
+
+      .field-team {
+        .field-player {
+          width: 6%;
+          height: 9.5%;
+          position: absolute;
+          pointer-events: initial;
+          transition-property: left, right;
+          transition-duration: 0.5s;
+          transition-timing-function: linear;
+          top: 45%;
+          display: grid;
+
+          > div {
+            svg {
+              width: 100%;
+              height: 100%;
+            }
+
+            &.moving {
+              display: none;
+            }
+          }
+
+          &.has-ball {
+            border: 1px solid $darkred;
+          }
+
+          &.moving {
+            .moving {
+              display: initial;
+            }
+            .normal {
+              display: none;
+            }
+          }
+        }
+
+        &.team-att {
+          z-index: 15;
+        }
+
+        &.team-1 {
+          .field-player {
+            > div {
+              transform: scaleX(-1);
+            }
+          }
+        }
+
+        &.color-blue {
+          .field-player {
+            color: $att-color;
+          }
+        }
+
+        &.color-red {
+          .field-player {
+            color: $darkred;
+          }
+        }
+
+        &.color-black {
+          .field-player {
+            color: $black;
+          }
+        }
+
+        &.color-orange {
+          .field-player {
+            color: $orange;
+          }
+        }
+      }
+
+      .overlay {
+        display: grid;
+        grid-template-columns: repeat(8, calc(100% / 8));
+        z-index: 5;
+
+        .section {
+          border: 1px solid $black;
+        }
+      }
+    }
+
+    .sideline {
+      padding: 0px 4.5%;
+      display: grid;
+      grid-template-columns: repeat(2, 50%);
+
+      .team {
+        text-align: center;
+        border: 0px;
+
+        &.team-blue {
+          color: $att-color;
+        }
+        &.team-red {
+          color: $darkred;
+        }
+        &.team-black {
+          color: $black;
+        }
+        &.team-orange {
+          color: $orange;
+        }
+      }
+    }
+  }
+
+  .moves {
+    border: 1px dotted $black;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+    overflow-y: scroll;
+    grid-row: span 50;
+
+    .move {
+      padding: 3px;
+
+      &.move-save {
+        background-color: $darkred;
+      }
+
+      &.move-goal {
+        background-color: $lightgreen;
+      }
+    }
+  }
+}
